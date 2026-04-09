@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BARBECUE - SUGGESTIONS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=VT323&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --accent:  #e7bf2e;
+  --accent2: #cca624;
+  --panel:   rgba(16, 16, 15, 0.88);
+  --panel2:  rgba(26, 26, 24, 0.82);
+  --border:  rgba(231, 191, 46, 0.25);
+  --text:    #fdfdfd;
+  --textdim: #cccccc;
+  --white:   #ffffff;
+  --danger:  #d93838;
+}
+
+html { scroll-behavior: smooth; }
+
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.selectable,
+.selectable * {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  user-select: text;
+  cursor: text;
+}
+
+body {
+  background: linear-gradient(160deg, #10100f 0%, #e7bf2e 100%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: 'VT323', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#particlesCanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 12px 60px;
+  perspective: 1000px;
+}
+
+.top-stripe {
+  background: var(--accent);
+  color: #10100f;
+  font-family: 'VT323', monospace;
+  font-size: 1.05rem;
+  letter-spacing: 0.14em;
+  padding: 5px 0;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.marquee-text {
+  display: inline-block;
+  animation: mscroll 22s linear infinite;
+}
+
+@keyframes mscroll {
+  0%   { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+
+.outer {
+  background: rgba(16, 16, 15, 0.6);
+  backdrop-filter: blur(4px);
+  border: 1.5px solid rgba(231, 191, 46, 0.18);
+  border-top: 3px solid var(--accent);
+  box-shadow: 0 15px 35px rgba(16, 16, 15, 0.6), 0 5px 15px rgba(16, 16, 15, 0.4);
+  overflow: hidden;
+  margin-top: 26px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tab-bar {
+  display: flex;
+  background: rgba(10, 10, 10, 0.95);
+  border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+
+.tab-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+  color: rgba(231, 191, 46, 0.5);
+  padding: 9px 22px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  margin-bottom: -2px;
+}
+
+.tab-btn:hover {
+  color: rgba(231, 191, 46, 0.85);
+}
+
+.tab-btn.active {
+  color: var(--white);
+  border-bottom: 3px solid var(--white);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeUp 0.35s ease;
+}
+
+.header-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 35px 20px 25px;
+  border-bottom: 2px solid var(--border);
+  background: var(--panel2);
+}
+
+.pfp-wrap {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.pfp-wrap:hover {
+  transform: scale(1.05) rotate(-3deg);
+}
+
+.pfp-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+  mask-image: radial-gradient(ellipse 88% 88% at 50% 50%, black 35%, rgba(0,0,0,0.55) 58%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 88% 88% at 50% 50%, black 35%, rgba(0,0,0,0.55) 58%, transparent 100%);
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.pfp-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 12px;
+  border: 2px solid rgba(231, 191, 46, 0.45);
+  pointer-events: none;
+}
+
+.site-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.8rem;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  margin-top: 18px;
+  text-shadow: 2px 2px 0 rgba(16, 16, 15, 0.8), 3px 3px 0 rgba(16, 16, 15, 0.5);
+}
+
+.full-panel {
+  background: var(--panel);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-area {
+  width: 100%;
+  min-height: 150px;
+  background: rgba(30, 30, 28, 0.6);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  color: var(--text);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.input-area:focus {
+  border-color: var(--accent);
+  background: rgba(40, 40, 38, 0.8);
+}
+
+.input-area::placeholder {
+  color: rgba(231, 191, 46, 0.4);
+}
+
+.submit-btn {
+  background: var(--accent);
+  color: #10100f;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.08em;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.submit-btn:hover {
+  background: var(--accent2);
+  transform: translateY(-2px);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.footer-stripe {
+  background: var(--accent);
+  color: #10100f;
+  font-size: 0.98rem;
+  letter-spacing: 0.14em;
+  text-align: center;
+  padding: 7px 0;
+}
+
+.work-grid {
+  padding: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-height: 75vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.work-grid::-webkit-scrollbar { width: 6px; }
+.work-grid::-webkit-scrollbar-track { background: rgba(231, 191, 46, 0.05); }
+.work-grid::-webkit-scrollbar-thumb { background: rgba(231, 191, 46, 0.28); border-radius: 3px; }
+.work-grid::-webkit-scrollbar-thumb:hover { background: rgba(231, 191, 46, 0.5); }
+
+.sugg-card {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--panel2);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  padding: 12px;
+}
+
+.sugg-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 22px rgba(16, 16, 15, 0.8);
+  border-color: var(--accent2);
+}
+
+.sugg-preview {
+  font-family: 'VT323', monospace;
+  font-size: 1.1rem;
+  color: var(--textdim);
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  width: 100%;
+}
+
+.thumb-hover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: rgba(16, 16, 15, 0.85);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.sugg-card:hover .thumb-hover { opacity: 1; }
+
+.thumb-play {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10100f;
+  font-size: 0.95rem;
+}
+
+.thumb-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.delete-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 26px;
+  height: 26px;
+  background: var(--danger);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+.sugg-card:hover .delete-btn {
+  opacity: 1;
+}
+
+.delete-btn:hover {
+  transform: scale(1.1);
+}
+
+.lb-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.88);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.38s ease;
+  backdrop-filter: blur(4px);
+}
+
+.lb-backdrop.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.lb-card {
+  position: fixed;
+  z-index: 1000;
+  background: #10100f;
+  border: 1.5px solid rgba(231, 191, 46, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  will-change: transform, top, left, width, height;
+}
+
+.lb-card.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.lb-text-area {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: var(--panel2);
+  padding: 30px;
+  overflow-y: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.lb-content {
+  font-family: 'VT323', monospace;
+  font-size: 1.6rem;
+  color: var(--text);
+  line-height: 1.6;
+  width: 100%;
+  word-wrap: break-word;
+}
+
+.lb-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  background: rgba(10, 10, 10, 0.95);
+  border-top: 1px solid rgba(231, 191, 46, 0.3);
+  flex-shrink: 0;
+}
+
+.lb-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: var(--accent2);
+}
+
+.lb-close {
+  background: none;
+  border: none;
+  color: rgba(231, 191, 46, 0.6);
+  font-size: 1.05rem;
+  font-family: 'VT323', monospace;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.lb-close:hover {
+  color: rgba(255, 255, 255, 1);
+  background: rgba(231, 191, 46, 0.3);
+}
+
+.loading-text {
+  padding: 40px;
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--textdim);
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 520px) {
+  .work-grid { grid-template-columns: repeat(2, 1fr); }
+  .outer { transform: none !important; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade { animation: fadeUp 0.5s ease forwards; opacity: 0; }
+.d1 { animation-delay: 0.04s; }
+.d2 { animation-delay: 0.1s; }
+.d3 { animation-delay: 0.18s; }
+.d4 { animation-delay: 0.26s; }
+
+</style>
+</head>
+<body>
+
+<canvas id="particlesCanvas"></canvas>
+
+<div class="page">
+
+  <div class="top-stripe fade d1">
+    <span class="marquee-text">
+      BARBECUE SUGGESTIONS ✦ ANONYMOUS ✦ TELL US WHAT TO ADD ✦ YOUR IDEAS MATTER ✦&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      BARBECUE SUGGESTIONS ✦ ANONYMOUS ✦ TELL US WHAT TO ADD ✦ YOUR IDEAS MATTER ✦
+    </span>
+  </div>
+
+  <div class="outer" id="mainCard">
+
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="submit">SUBMIT</button>
+      <button class="tab-btn" data-tab="view">SUGGESTIONS</button>
+    </div>
+
+    <div class="tab-content active" id="tab-submit">
+      <div class="header-block fade d2">
+        <div class="pfp-wrap">
+          <div class="pfp-ring"></div>
+          <img src="newpic.png" alt="BARBECUE">
+        </div>
+        <div class="site-title">BARBECUE - SUGGESTIONS</div>
+      </div>
+
+      <div class="full-panel fade d3">
+        <textarea id="suggestionInput" class="input-area selectable" placeholder="Write your anonymous suggestion here..."></textarea>
+        <button id="submitBtn" class="submit-btn">SEND SUGGESTION</button>
+      </div>
+
+      <div class="footer-stripe fade d4">
+        BARBECUE &nbsp;✦&nbsp; SECURE &nbsp;✦&nbsp; ANONYMOUS &nbsp;✦&nbsp; WE READ EVERYTHING
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-view">
+      <div class="work-grid" id="suggGrid">
+        <div class="loading-text" id="loadingText">Fetching suggestions...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="lb-backdrop" id="lbBackdrop"></div>
+<div class="lb-card" id="lbCard">
+  <div class="lb-text-area">
+    <div class="lb-content selectable" id="lbTextContent"></div>
+  </div>
+  <div class="lb-footer">
+    <span class="lb-title" id="lbTitle">SUGGESTION 1</span>
+    <button class="lb-close" id="lbCloseBtn">[ CLOSE ]</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  const canvasEl = document.getElementById('particlesCanvas');
+  const context2D = canvasEl.getContext('2d');
+  const mainCardEl = document.getElementById('mainCard');
+  const backendUrl = 'https://barbbot-cv7d.onrender.com';
+
+  let screenWidth, screenHeight, particlesArray;
+  let mouseLocX = -1000;
+  let mouseLocY = -1000;
+
+  const particleCount = 85;
+  const moveSpeed = 0.32;
+  const connectDist = 125;
+  const connectDistSq = connectDist * connectDist;
+  const mouseDist = 180;
+  const mouseDistSq = mouseDist * mouseDist;
+
+  let targetRx = 0, targetRy = 0, currentRx = 0, currentRy = 0;
+  let lbTargetRx = 0, lbTargetRy = 0, lbCurrentRx = 0, lbCurrentRy = 0;
+
+  function handleResize() {
+    screenWidth = canvasEl.width = window.innerWidth;
+    screenHeight = canvasEl.height = window.innerHeight;
+  }
+
+  function createParticle() {
+    return {
+      xPos: Math.random() * screenWidth,
+      yPos: Math.random() * screenHeight,
+      velX: (Math.random() - 0.5) * moveSpeed * 2,
+      velY: (Math.random() - 0.5) * moveSpeed * 2,
+    };
+  }
+
+  function initializeCanvas() {
+    handleResize();
+    particlesArray = Array.from({ length: particleCount }, createParticle);
+  }
+
+  function runRenderLoop() {
+    context2D.clearRect(0, 0, screenWidth, screenHeight);
+
+    currentRx += (targetRx - currentRx) * 0.1;
+    currentRy += (targetRy - currentRy) * 0.1;
+
+    if (window.innerWidth > 520 && !isLightboxOpen) {
+      mainCardEl.style.transform = `rotateX(${currentRx}deg) rotateY(${currentRy}deg)`;
+    }
+
+    if (isLightboxOpen) {
+      lbCurrentRx += (lbTargetRx - lbCurrentRx) * 0.04;
+      lbCurrentRy += (lbTargetRy - lbCurrentRy) * 0.04;
+      lightboxCardEl.style.transform = `perspective(1400px) rotateX(${lbCurrentRx}deg) rotateY(${lbCurrentRy}deg)`;
+    }
+
+    for (let indexOne = 0; indexOne < particleCount; indexOne++) {
+      const partOne = particlesArray[indexOne];
+
+      if (partOne.xPos < 0 || partOne.xPos > screenWidth) partOne.velX *= -1;
+      if (partOne.yPos < 0 || partOne.yPos > screenHeight) partOne.velY *= -1;
+      partOne.xPos += partOne.velX;
+      partOne.yPos += partOne.velY;
+
+      const diffMouseX = partOne.xPos - mouseLocX;
+      const diffMouseY = partOne.yPos - mouseLocY;
+      const diffMouseSq = diffMouseX * diffMouseX + diffMouseY * diffMouseY;
+
+      if (diffMouseSq < mouseDistSq) {
+        const distVal = Math.sqrt(diffMouseSq);
+        context2D.beginPath();
+        context2D.moveTo(partOne.xPos, partOne.yPos);
+        context2D.lineTo(mouseLocX, mouseLocY);
+        context2D.strokeStyle = `rgba(231,191,46,${(1 - distVal / mouseDist) * 0.4})`;
+        context2D.lineWidth = 1;
+        context2D.stroke();
+        const forceVal = (mouseDist - distVal) / mouseDist;
+        partOne.xPos += (diffMouseX / distVal) * forceVal * 1.5;
+        partOne.yPos += (diffMouseY / distVal) * forceVal * 1.5;
+      }
+
+      context2D.beginPath();
+      context2D.arc(partOne.xPos, partOne.yPos, 2, 0, Math.PI * 2);
+      context2D.fillStyle = 'rgba(231,191,46,0.55)';
+      context2D.fill();
+
+      for (let indexTwo = indexOne + 1; indexTwo < particleCount; indexTwo++) {
+        const partTwo = particlesArray[indexTwo];
+        const diffPartsX = partOne.xPos - partTwo.xPos;
+        const diffPartsY = partOne.yPos - partTwo.yPos;
+        const diffPartsSq = diffPartsX * diffPartsX + diffPartsY * diffPartsY;
+        if (diffPartsSq < connectDistSq) {
+          const distPartsVal = Math.sqrt(diffPartsSq);
+          context2D.beginPath();
+          context2D.moveTo(partOne.xPos, partOne.yPos);
+          context2D.lineTo(partTwo.xPos, partTwo.yPos);
+          context2D.strokeStyle = `rgba(231,191,46,${(1 - distPartsVal / connectDist) * 0.25})`;
+          context2D.lineWidth = 0.8;
+          context2D.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(runRenderLoop);
+  }
+
+  window.addEventListener('resize', handleResize);
+
+  window.addEventListener('mousemove', (eventObj) => {
+    mouseLocX = eventObj.clientX;
+    mouseLocY = eventObj.clientY;
+    if (window.innerWidth > 520) {
+      targetRx = (window.innerHeight / 2 - eventObj.clientY) / 180;
+      targetRy = (eventObj.clientX - window.innerWidth / 2) / 180;
+    }
+  });
+
+  window.addEventListener('mouseout', () => {
+    mouseLocX = -1000;
+    mouseLocY = -1000;
+    targetRx = 0;
+    targetRy = 0;
+  });
+
+  const tabButtonsList = document.querySelectorAll('.tab-btn');
+  const tabContentsList = document.querySelectorAll('.tab-content');
+  let isGridPopulated = false;
+
+  tabButtonsList.forEach(btnEl => {
+    btnEl.addEventListener('click', () => {
+      tabButtonsList.forEach(otherBtn => otherBtn.classList.remove('active'));
+      tabContentsList.forEach(otherTab => otherTab.classList.remove('active'));
+      btnEl.classList.add('active');
+      document.getElementById('tab-' + btnEl.dataset.tab).classList.add('active');
+      if (btnEl.dataset.tab === 'view' && !isGridPopulated) {
+        fetchSuggestionsGrid();
+      }
+    });
+  });
+
+  async function deleteSuggestion(messageId, cardEl) {
+    const adminPass = prompt("Enter Admin Password to delete this suggestion:");
+    if (!adminPass) return;
+
+    try {
+      const deleteResponse = await fetch(`${backendUrl}/api/suggestions/${messageId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': adminPass
+        }
+      });
+
+      if (deleteResponse.ok) {
+        cardEl.remove();
+        alert('Deleted successfully!');
+      } else {
+        alert('Failed to delete. Incorrect password or server error.');
+      }
+    } catch (networkError) {
+      alert('Network error. Failed to reach server.');
+    }
+  }
+
+  async function fetchSuggestionsGrid() {
+    isGridPopulated = true;
+    const gridContainerEl = document.getElementById('suggGrid');
+    
+    gridContainerEl.innerHTML = '<div class="loading-text" id="loadingText">Fetching suggestions...</div>';
+    
+    try {
+      const apiResponse = await fetch(`${backendUrl}/api/suggestions`);
+      if (!apiResponse.ok) throw new Error('Network response was not ok');
+      const apiData = await apiResponse.json();
+      
+      gridContainerEl.innerHTML = '';
+      
+      if (apiData.length === 0) {
+        gridContainerEl.innerHTML = '<div class="loading-text">No suggestions found.</div>';
+        return;
+      }
+
+      apiData.forEach((suggObj, arrayIdx) => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'sugg-card';
+        
+        const previewEl = document.createElement('div');
+        previewEl.className = 'sugg-preview';
+        previewEl.innerText = suggObj.content;
+        
+        const hoverOverlayEl = document.createElement('div');
+        hoverOverlayEl.className = 'thumb-hover';
+        hoverOverlayEl.innerHTML = `<div class="thumb-play">&#128065;</div><div class="thumb-label">READ</div>`;
+        
+        const deleteBtnEl = document.createElement('button');
+        deleteBtnEl.className = 'delete-btn';
+        deleteBtnEl.innerHTML = '&#128465;'; 
+        
+        deleteBtnEl.addEventListener('click', (eventObj) => {
+          eventObj.stopPropagation();
+          deleteSuggestion(suggObj.id, cardEl);
+        });
+
+        cardEl.appendChild(previewEl);
+        cardEl.appendChild(hoverOverlayEl);
+        cardEl.appendChild(deleteBtnEl);
+        
+        cardEl.addEventListener('click', () => triggerLightbox(arrayIdx + 1, cardEl, suggObj.content));
+        gridContainerEl.appendChild(cardEl);
+      });
+    } catch (fetchError) {
+      gridContainerEl.innerHTML = '<div class="loading-text">Failed to load suggestions. Bot might be sleeping.</div>';
+      isGridPopulated = false;
+    }
+  }
+
+  const inputTextAreaEl = document.getElementById('suggestionInput');
+  const submitDataBtnEl = document.getElementById('submitBtn');
+
+  submitDataBtnEl.addEventListener('click', async () => {
+    const rawTextValue = inputTextAreaEl.value.trim();
+    if (!rawTextValue) return;
+
+    submitDataBtnEl.innerText = 'SENDING...';
+    submitDataBtnEl.disabled = true;
+
+    try {
+      const postResponse = await fetch(`${backendUrl}/api/suggestions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: rawTextValue })
+      });
+
+      if (postResponse.ok) {
+        inputTextAreaEl.value = '';
+        submitDataBtnEl.innerText = 'SENT SUCCESSFULLY!';
+        isGridPopulated = false; 
+      } else {
+        submitDataBtnEl.innerText = 'FAILED TO SEND';
+      }
+    } catch (networkError) {
+      submitDataBtnEl.innerText = 'NETWORK ERROR';
+    }
+
+    setTimeout(() => {
+      submitDataBtnEl.innerText = 'SEND SUGGESTION';
+      submitDataBtnEl.disabled = false;
+    }, 2500);
+  });
+
+  const lightboxBackdropEl = document.getElementById('lbBackdrop');
+  const lightboxCardEl = document.getElementById('lbCard');
+  const lightboxTextContentEl = document.getElementById('lbTextContent');
+  const lightboxTitleEl = document.getElementById('lbTitle');
+  const lightboxCloseBtnEl = document.getElementById('lbCloseBtn');
+
+  let activeCardEl = null;
+  let isLightboxOpen = false;
+  const edgePadding = 36;
+
+  function triggerLightbox(suggestionId, originEl, fullTextContent) {
+    if (isLightboxOpen) return;
+    isLightboxOpen = true;
+    activeCardEl = originEl;
+
+    lightboxTitleEl.textContent = 'SUGGESTION ' + suggestionId;
+    lightboxTextContentEl.innerText = fullTextContent;
+    lbTargetRx = 0; lbTargetRy = 0; lbCurrentRx = 0; lbCurrentRy = 0;
+
+    const rectBounds = originEl.getBoundingClientRect();
+
+    lightboxCardEl.style.transition = 'none';
+    lightboxCardEl.style.transform = '';
+    lightboxCardEl.style.left = rectBounds.left + 'px';
+    lightboxCardEl.style.top = rectBounds.top + 'px';
+    lightboxCardEl.style.width = rectBounds.width + 'px';
+    lightboxCardEl.style.height = rectBounds.height + 'px';
+    lightboxCardEl.style.borderRadius = '8px';
+    lightboxCardEl.classList.add('visible');
+    lightboxBackdropEl.classList.add('active');
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const curveStr = 'cubic-bezier(0.22, 1, 0.36, 1)';
+      lightboxCardEl.style.transition = `left 0.44s ${curveStr}, top 0.44s ${curveStr}, width 0.44s ${curveStr}, height 0.44s ${curveStr}, border-radius 0.3s ease`;
+      lightboxCardEl.style.left = edgePadding + 'px';
+      lightboxCardEl.style.top = edgePadding + 'px';
+      lightboxCardEl.style.width = (window.innerWidth - edgePadding * 2) + 'px';
+      lightboxCardEl.style.height = (window.innerHeight - edgePadding * 2) + 'px';
+      lightboxCardEl.style.borderRadius = '16px';
+    }));
+  }
+
+  function dismissLightbox() {
+    if (!isLightboxOpen || !activeCardEl) return;
+    isLightboxOpen = false;
+
+    lbTargetRx = 0; lbTargetRy = 0; lbCurrentRx = 0; lbCurrentRy = 0;
+    lightboxCardEl.style.transform = '';
+
+    const targetRectBounds = activeCardEl.getBoundingClientRect();
+    const curveStrTwo = 'cubic-bezier(0.4, 0, 0.2, 1)';
+    lightboxCardEl.style.transition = `left 0.38s ${curveStrTwo}, top 0.38s ${curveStrTwo}, width 0.38s ${curveStrTwo}, height 0.38s ${curveStrTwo}, border-radius 0.25s ease`;
+    lightboxCardEl.style.left = targetRectBounds.left + 'px';
+    lightboxCardEl.style.top = targetRectBounds.top + 'px';
+    lightboxCardEl.style.width = targetRectBounds.width + 'px';
+    lightboxCardEl.style.height = targetRectBounds.height + 'px';
+    lightboxCardEl.style.borderRadius = '8px';
+
+    lightboxBackdropEl.classList.remove('active');
+
+    setTimeout(() => {
+      lightboxCardEl.classList.remove('visible');
+      lightboxCardEl.style.transition = 'none';
+      lightboxTextContentEl.innerText = '';
+      activeCardEl = null;
+    }, 400);
+  }
+
+  lightboxCardEl.addEventListener('mousemove', (eventObj) => {
+    if (!isLightboxOpen) return;
+    const boxRect = lightboxCardEl.getBoundingClientRect();
+    const normX = (boxRect.top + boxRect.height / 2 - eventObj.clientY) / (boxRect.height / 2);
+    const normY = (eventObj.clientX - boxRect.left - boxRect.width / 2) / (boxRect.width / 2);
+    lbTargetRx = Math.max(-2, Math.min(2, normX * 2));
+    lbTargetRy = Math.max(-2, Math.min(2, normY * 2));
+  });
+
+  lightboxCardEl.addEventListener('mouseleave', () => {
+    lbTargetRx = 0;
+    lbTargetRy = 0;
+  });
+
+  lightboxCloseBtnEl.addEventListener('click', eventObj => { eventObj.stopPropagation(); dismissLightbox(); });
+  lightboxBackdropEl.addEventListener('click', dismissLightbox);
+  document.addEventListener('keydown', eventObj => { if (eventObj.key === 'Escape' && isLightboxOpen) dismissLightbox(); });
+
+  initializeCanvas();
+  runRenderLoop();
+
+})();
+</script>
+</body>
+</html>
