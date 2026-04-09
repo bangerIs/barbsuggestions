@@ -684,7 +684,7 @@ body {
     if (!adminPass) return;
 
     try {
-      const deleteResponse = await fetch(`${backendUrl}/api/suggestions/${messageId}`, {
+      const deleteResponse = await fetch(`${backendUrl}/api/barb-suggestions/${messageId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': adminPass
@@ -709,7 +709,7 @@ body {
     gridContainerEl.innerHTML = '<div class="loading-text" id="loadingText">Fetching suggestions...</div>';
     
     try {
-      const apiResponse = await fetch(`${backendUrl}/api/suggestions`);
+      const apiResponse = await fetch(`${backendUrl}/api/barb-suggestions`);
       if (!apiResponse.ok) throw new Error('Network response was not ok');
       const apiData = await apiResponse.json();
       
@@ -765,7 +765,7 @@ body {
     submitDataBtnEl.disabled = true;
 
     try {
-      const postResponse = await fetch(`${backendUrl}/api/suggestions`, {
+      const postResponse = await fetch(`${backendUrl}/api/barb-suggestions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: rawTextValue })
